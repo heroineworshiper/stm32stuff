@@ -18,8 +18,11 @@
  * 
  */
 
+// make bootloader.bin
+
 // Useful commands to install it:
 
+// Using the full JTAG interface:
 // src/openocd -f script
 
 // telnet localhost 4444
@@ -33,7 +36,8 @@
 // The bootloader should print out some information & crash, 
 // since no program has been written.
 
-
+// Using JLINK SWD interface:
+// Run ./jlink
 
 
 #include "linux.h"
@@ -42,7 +46,28 @@
 #include "stm32f4xx_rcc.h"
 #include "stm32f4xx_gpio.h"
 #include "stm32f4xx_tim.h"
+
+#define ENABLE_PRINT
 #include "uart.h"
+
+
+#define handle_uart() \
+{ \
+	if((USART6->SR & USART_FLAG_TC) != 0 && \
+		uart.uart_size > 0) \
+	{ \
+		USART6->DR = uart.uart_buffer[uart.uart_read_ptr++]; \
+        if(uart.uart_read_ptr >= UART_BUFFER_SIZE) \
+            uart.uart_read_ptr = 0; \
+        uart.uart_size--; \
+	} \
+ \
+	if((USART6->SR & USART_FLAG_RXNE) != 0) \
+	{ \
+		uart.got_input = 1; \
+		uart.input = USART6->DR & (uint16_t)0x01FF; \
+	} \
+}
 
 
 unsigned char *write_buffer;

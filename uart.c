@@ -103,44 +103,25 @@ void USART6_IRQHandler(void)
 
 
 
-void send_uart(const unsigned char *text, int size)
+void send_uart(unsigned char c)
 {
-	if(uart.uart_offset >= uart.uart_size)
-	{
-		uart.uart_offset = 0;
-		uart.uart_size = 0;
-	}
-
-	int i;
-	for(i = 0; i < size && uart.uart_size < UART_BUFFER_SIZE && text[i] != 0; i++)
-		uart.uart_buffer[uart.uart_size++] = text[i];
-
-	if(uart.uart_buffer[uart.uart_size - 1] == '\n')
-		uart.need_lf = 0;
+	if(uart.uart_size < UART_BUFFER_SIZE)
+    {
+		uart.uart_buffer[uart.uart_write_ptr++] = c;
+        if(uart.uart_write_ptr >= UART_BUFFER_SIZE)
+            uart.uart_write_ptr = 0;
+        uart.uart_size++;
+	    if(c == '\n')
+		    uart.need_lf = 0;
+    }
 }
 
-
-void send_uart_binary(const unsigned char *text, int size)
-{
-	if(uart.uart_offset >= uart.uart_size)
-	{
-		uart.uart_offset = 0;
-		uart.uart_size = 0;
-	}
-
-	int i;
-	for(i = 0; i < size && uart.uart_size < UART_BUFFER_SIZE; i++)
-		uart.uart_buffer[uart.uart_size++] = text[i];
-
-	if(uart.uart_buffer[uart.uart_size - 1] == '\n')
-		uart.need_lf = 0;
-}
 
 void print_text(const char *text)
 {
 	int i = 0;
-	while(text[i] != 0 && i < UART_BUFFER_SIZE) i++;
-	send_uart(text, i);
+	while(text[i] != 0) send_uart(text[i++]);
+
 }
 
 void print_digit(int *number, 
@@ -199,13 +180,13 @@ void print_number_nospace(int number)
 {
 	char buffer[16];
 	int len = sprint_number(buffer, number, sizeof(buffer));
-	send_uart(buffer, len);
+	print_text(buffer);
 }
 
 void print_number(int number)
 {
 	print_number_nospace(number);
-	send_uart(" ", 1);
+	send_uart(' ');
 }
 
 void print_float(float number)
@@ -215,7 +196,7 @@ void print_float(float number)
 	unsigned char *ptr = buffer;
 
 	int whole = (int)number;
-	if(whole == 0 && number < 0) send_uart("-", 1);
+	if(whole == 0 && number < 0) send_uart('-');
 	print_number_nospace(whole);
 
 	
@@ -235,16 +216,17 @@ void print_float(float number)
 		{
 			*ptr++ = '0' + remainder % 10;
 		}
-		send_uart(buffer, ptr - buffer);
+        *ptr++ = 0;
+		print_text(buffer);
 	}
-	print_text(" ");
+	send_uart(' ');
 }
 
 void print_fixed_nospace(int number)
 {
 	if(number < 0) 
 	{
-		print_text("-");
+		send_uart('-');
 		number = -number;
 	}
 	
@@ -253,21 +235,18 @@ void print_fixed_nospace(int number)
 	char string[1];
 	if(fraction)
 	{
-		send_uart(".", 1);
+		send_uart('.');
 		fraction = fraction * 1000 / 256;
-		string[0] = '0' + (fraction / 100);
-		send_uart(string, 1);
-		string[0] = '0' + ((fraction / 10) % 10);
-		send_uart(string, 1);
-		string[0] = '0' + (fraction % 10);
-		send_uart(string, 1);
+		send_uart('0' + (fraction / 100));
+		send_uart('0' + ((fraction / 10) % 10));
+		send_uart('0' + (fraction % 10));
 	}
 }
 
 void print_fixed(int number)
 {
 	print_fixed_nospace(number);
-	send_uart(" ", 1);
+	send_uart(' ');
 }
 
 
@@ -292,19 +271,22 @@ void print_hex(uint32_t number)
 	}
 
 	*dst++ = ' ';
-	send_uart(buffer, dst - buffer);
+    *dst++ = 0;
+	print_text(buffer);
 }
 
 void print_hex2(unsigned char number)
 {
-	char buffer[4];
+	char buffer[6];
 	int i = 0;
 	
 //	buffer[i++] = '0';
 //	buffer[i++] = 'x';
 	buffer[i++] = hex_table[(number >> 4) & 0xf];
 	buffer[i++] = hex_table[number & 0xf];
-	send_uart(buffer, i);
+//    buffer[i++] = ' ';
+    buffer[i++] = 0;
+	print_text(buffer);
 }
 
 void print_hex1(unsigned char number)
@@ -313,7 +295,9 @@ void print_hex1(unsigned char number)
 	int i = 0;
 	
 	buffer[i++] = hex_table[number & 0xf];
-	send_uart(buffer, i);
+    buffer[i++] = ' ';
+    buffer[i++] = 0;
+	print_text(buffer);
 }
 
 void print_buffer(const unsigned char *buf, int len)
@@ -330,16 +314,11 @@ void print_buffer(const unsigned char *buf, int len)
 		
 		*ptr++ = hex_table[(buf[i] >> 4) & 0xf];
 		*ptr++ = hex_table[buf[i] & 0xf];
-		
-		if(ptr - buffer > UART_BUFFER_SIZE / 2)
-		{
-			send_uart(buffer, ptr - buffer);
-			ptr = buffer;
-		}
+        *ptr++ = ' ';
 	}
 	
 	*ptr = 0;
-	send_uart(buffer, ptr - buffer);
+	print_text(buffer);
 	print_lf();
 }
 
@@ -359,27 +338,22 @@ void print_buffer16(const uint16_t *buf, int len)
 		*ptr++ = hex_table[(buf[i] >> 8) & 0xf];
 		*ptr++ = hex_table[(buf[i] >> 4) & 0xf];
 		*ptr++ = hex_table[buf[i] & 0xf];
-		
-		if(ptr - buffer > UART_BUFFER_SIZE / 2)
-		{
-			send_uart(buffer, ptr - buffer);
-			ptr = buffer;
-		}
+        *ptr++ = ' ';
 	}
 	
 	*ptr = 0;
-	send_uart(buffer, ptr - buffer);
+	print_text(buffer);
 	print_lf();
 }
 
 void flush_uart()
 {
-	while(uart.uart_offset < uart.uart_size) handle_uart();
+	while(uart.uart_size > 0) handle_uart();
 }
 
 void print_lf()
 {
-	send_uart("\n", 1);
+	send_uart('\n');
 }
 
 /*

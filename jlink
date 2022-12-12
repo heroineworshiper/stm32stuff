@@ -1,0 +1,3 @@
+JLINK_DIR=/root/JLink_Linux_V782f_x86_64/
+
+$JLINK_DIR/JLinkExe -autoconnect 1 -if SWD -jtagconf -1,-1 -speed 4000 jlink.script

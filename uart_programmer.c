@@ -46,7 +46,7 @@
 #define TDO_PIN (0x2)
 
 
-#define CAPTURE_FILE "marcy2.cap"
+#define CAPTURE_FILE "terminal.cap"
 #define VENDOR_ID 0x04d8
 #define PRODUCT_ID 0x000d
 #define PACKET_SIZE 64

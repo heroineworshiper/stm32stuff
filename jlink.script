@@ -1,0 +1,6 @@
+device STM32F405ZG
+loadbin bootloader.bin 0x8000000
+r
+g
+qc
+exit

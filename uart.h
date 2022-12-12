@@ -18,9 +18,7 @@
  * 
  */
 
-
-
-//#include "stm32f1xx_hal_uart.h"
+// You must define ENABLE_PRINT to use it
 
 
 
@@ -33,16 +31,18 @@
 
 #define TRACE trace(__FILE__, __FUNCTION__, __LINE__, 1);
 #define TRACE2 trace(__FILE__, __FUNCTION__, __LINE__, 0);
-#define UART_BUFFER_SIZE 1024
+#define UART_BUFFER_SIZE 4096
 
 
 extern const char hex_table[];
 
 typedef struct
 {
-	int uart_offset;
+	int uart_read_ptr;
+    int uart_write_ptr;
 	int uart_size;
 	unsigned char uart_buffer[UART_BUFFER_SIZE];
+
 	unsigned char input;
 	int got_input;
 	int need_lf;
@@ -51,7 +51,9 @@ typedef struct
 extern uart_t uart;
 
 void init_uart();
-void send_uart(const unsigned char *text, int size);
+
+#ifdef ENABLE_PRINT
+void send_uart(unsigned char c);
 void print_text(const char *text);
 int sprint_number(unsigned char *dst, int number, int maxlen);
 void print_float(float number);
@@ -67,40 +69,30 @@ void print_buffer16(const uint16_t *buf, int len);
 void flush_uart();
 void print_lf();
 
+#else
+
+#define send_uart(c) {}
+#define print_text(text) {}
+#define sprint_number(dst, number, maxlen) {}
+#define print_float(number) {}
+#define print_fixed(number) {}
+#define print_fixed_nospace(number) {}
+#define print_number(number) {}
+#define print_number_nospace(number) {}
+#define print_hex(number) {}
+#define print_hex1(number) {}
+#define print_hex2(number) {}
+#define print_buffer(buf, len) {}
+#define print_buffer16(buf, len) {}
+#define flush_uart() {}
+#define print_lf() {}
+
+#endif
+
+
+
 //void handle_uart();
 
-#ifndef USE_OUTBOARD_GYRO
-
-
-#define handle_uart() \
-{ \
-	if((USART6->SR & USART_FLAG_TC) != 0 && \
-		uart.uart_offset < uart.uart_size) \
-	{ \
-		USART6->DR = uart.uart_buffer[uart.uart_offset++]; \
-	} \
- \
-	if((USART6->SR & USART_FLAG_RXNE) != 0) \
-	{ \
-		uart.got_input = 1; \
-		uart.input = USART6->DR & (uint16_t)0x01FF; \
-	} \
-}
-
-
-#else  // !USE_OUTBOARD_GYRO
-
-#define handle_uart() \
-{ \
-	if((USART6->SR & USART_FLAG_TC) != 0 && \
-		uart.uart_offset < uart.uart_size) \
-	{ \
-		USART6->DR = uart.uart_buffer[uart.uart_offset++]; \
-	} \
-}
-
-
-#endif  // USE_OUTBOARD_GYRO
 
 
 
