@@ -53,6 +53,17 @@ extern uart_t uart;
 void init_uart();
 
 #ifdef ENABLE_PRINT
+
+#define HANDLE_UART_OUT \
+	if((USART6->SR & USART_FLAG_TC) != 0 && \
+		uart.uart_size > 0) \
+	{ \
+		USART6->DR = uart.uart_buffer[uart.uart_read_ptr++]; \
+        if(uart.uart_read_ptr >= UART_BUFFER_SIZE) \
+            uart.uart_read_ptr = 0; \
+        uart.uart_size--; \
+	}
+
 void send_uart(unsigned char c);
 void print_text(const char *text);
 int sprint_number(unsigned char *dst, int number, int maxlen);
@@ -70,6 +81,8 @@ void flush_uart();
 void print_lf();
 
 #else
+
+#define HANDLE_UART_OUT {}
 
 #define send_uart(c) {}
 #define print_text(text) {}

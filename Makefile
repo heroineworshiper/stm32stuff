@@ -16,7 +16,8 @@ ARM_CFLAGS := \
 	-I. \
 	-Irtlwifi \
 	-Iarm \
-	-Istm32f4
+	-Istm32f4 \
+        -DENABLE_PRINT
 ARM_LIBM := $(shell $(GCC_ARM) $(ARM_CFLAGS) -print-file-name=libm.a)
 ARM_LIBC := $(shell $(GCC_ARM) $(ARM_CFLAGS) -print-libgcc-file-name)
 ARM_LFLAGS := -mcpu=cortex-m4 \

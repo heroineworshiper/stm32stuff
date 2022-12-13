@@ -92,17 +92,7 @@ void init_uart()
 }
 
 
-#ifdef BLUETOOTH_PASSTHROUGH
-void USART6_IRQHandler(void)
-{
-	unsigned char c = USART6->DR;
-	uart.input = c;
-	uart.got_input = 1;
-}
-#endif // BLUETOOTH_PASSTHROUGH
-
-
-
+#ifdef ENABLE_PRINT
 void send_uart(unsigned char c)
 {
 	if(uart.uart_size < UART_BUFFER_SIZE)
@@ -115,6 +105,16 @@ void send_uart(unsigned char c)
 		    uart.need_lf = 0;
     }
 }
+
+
+#ifdef BLUETOOTH_PASSTHROUGH
+void USART6_IRQHandler(void)
+{
+	unsigned char c = USART6->DR;
+	uart.input = c;
+	uart.got_input = 1;
+}
+#endif // BLUETOOTH_PASSTHROUGH
 
 
 void print_text(const char *text)
@@ -348,7 +348,7 @@ void print_buffer16(const uint16_t *buf, int len)
 
 void flush_uart()
 {
-	while(uart.uart_size > 0) handle_uart();
+	while(uart.uart_size > 0) HANDLE_UART_OUT
 }
 
 void print_lf()
@@ -373,12 +373,13 @@ void print_lf()
  * }
  */
 
+#endif // ENABLE_PRINT
 
 unsigned char read_char()
 {
 	while(!uart_got_input())
 	{
-		handle_uart();
+		HANDLE_UART_OUT
 	}
 	return uart_get_input();
 }
