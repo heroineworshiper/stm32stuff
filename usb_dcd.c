@@ -24,7 +24,6 @@
 
 
 
-#ifdef USE_USB
 #include "usb_dcd.h"
 #include "usb_bsp.h"
 #include "uart.h"
@@ -466,7 +465,6 @@ void DCD_SetEPStatus (USB_OTG_CORE_HANDLE *pdev , uint8_t epnum , uint32_t Statu
 }
 
 
-#endif
 
 /**
 * @}

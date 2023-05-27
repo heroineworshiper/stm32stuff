@@ -24,7 +24,6 @@
 #include "usbd_ioreq.h"
 
 
-#ifdef USE_USB
 
 /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
   * @{
@@ -227,7 +226,6 @@ uint16_t  USBD_GetRxCount (USB_OTG_CORE_HANDLE  *pdev , uint8_t epnum)
 
 
 
-#endif // USE_USB
 /**
   * @}
   */ 

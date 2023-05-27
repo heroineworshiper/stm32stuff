@@ -1733,6 +1733,7 @@ USB_OTG_STS USB_OTG_EPStartXfer(USB_OTG_CORE_HANDLE *pdev , USB_OTG_EP *ep)
     /* OUT endpoint */
     depctl.d32  = USB_OTG_READ_REG32(&(pdev->regs.OUTEP_REGS[ep->num]->DOEPCTL));
     deptsiz.d32 = USB_OTG_READ_REG32(&(pdev->regs.OUTEP_REGS[ep->num]->DOEPTSIZ));
+
     /* Program the transfer size and packet count as follows:
     * pktcnt = N
     * xfersize = N * maxpacket

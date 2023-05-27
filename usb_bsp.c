@@ -68,7 +68,7 @@ ErrorStatus HSEStartUpStatus;
 /* Private functions ---------------------------------------------------------*/
  static void BSP_SetTime(uint8_t Unit);
  static void BSP_Delay(uint32_t nTime, uint8_t Unit);
- static void USB_OTG_BSP_TimeInit ( void );
+void USB_OTG_BSP_TimeInit ( void );
 
 /**
   * @brief  BSP_Init
@@ -89,6 +89,11 @@ void BSP_Init(void)
  */
 }
 
+
+
+
+
+#if 0
 /**
   * @brief  USB_OTG_BSP_Init
   *         Initilizes BSP configurations
@@ -167,6 +172,9 @@ void USB_OTG_BSP_EnableInterrupt(USB_OTG_CORE_HANDLE *pdev)
 //  	NVIC_Init(&NVIC_InitStructure);
 }
 
+#endif // 0
+
+
 /**
   * @brief  BSP_Drive_VBUS
   *         Drives the Vbus signal through IO
@@ -231,7 +239,7 @@ void  USB_OTG_BSP_ConfigVBUS(USB_OTG_CORE_HANDLE *pdev)
   * @param  None
   * @retval None
   */
-static void USB_OTG_BSP_TimeInit (void)
+void USB_OTG_BSP_TimeInit (void)
 {
   NVIC_InitTypeDef NVIC_InitStructure;
 //TRACE

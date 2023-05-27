@@ -47,11 +47,11 @@
         compiler preprocessor.
    */
 #ifndef USE_USB_OTG_FS
-//#define USE_USB_OTG_FS
+#define USE_USB_OTG_FS
 #endif /* USE_USB_OTG_FS */
 
 #ifndef USE_USB_OTG_HS
-#define USE_USB_OTG_HS
+//#define USE_USB_OTG_HS
 #endif /* USE_USB_OTG_HS */
 
 #ifndef USE_ULPI_PHY
@@ -135,7 +135,7 @@
 /****************** USB OTG MODE CONFIGURATION ********************************/
 
 // USB mode from settings.h
-#ifdef USE_USB
+//#ifdef USE_USB
 
 
 #define USE_DEVICE_MODE
@@ -146,16 +146,23 @@
 #define TX4_FIFO_HS_SIZE						  0
 #define TX5_FIFO_HS_SIZE						  0
 
+#define RX_FIFO_FS_SIZE                          128
+#define TX0_FIFO_FS_SIZE                          64
+#define TX1_FIFO_FS_SIZE                         128
+#define TX2_FIFO_FS_SIZE                          0
+#define TX3_FIFO_FS_SIZE                          0
+#define TXH_NP_FS_FIFOSIZ                         96
+#define TXH_P_FS_FIFOSIZ                          96
 
-#else
+//#else
 
 
 // WIFI mode from settings.h
-#define USE_HOST_MODE
+//#define USE_HOST_MODE
 
 
 
-#endif
+//#endif
 
 
 

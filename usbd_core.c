@@ -23,7 +23,6 @@
 #include "settings.h"
 
 
-#if defined(USE_USB) && !defined(COPTER_MODE)
 #include "usbd_core.h"
 #include "usbd_req.h"
 #include "usbd_ioreq.h"
@@ -488,7 +487,6 @@ static uint8_t USBD_DevDisconnected(USB_OTG_CORE_HANDLE  *pdev)
 
 
 
-#endif // defined(USE_USB) && !defined(COPTER_MODE)
 /**
 * @}
 */ 

@@ -24,7 +24,6 @@
 
 
 
-#if defined(USE_USB) && !defined(COPTER_MODE)
 #include "usbd_req.h"
 #include "usbd_ioreq.h"
 #include "usbd_desc.h"
@@ -868,7 +867,6 @@ static uint8_t USBD_GetLen(uint8_t *buf)
 }
 
 
-#endif // defined(USE_USB) && !defined(COPTER_MODE)
 
 
 
