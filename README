@@ -1,5 +1,6 @@
-STM32 STUFF
-Copyright (C) 2022  Adam Williams <broadcast at earthling dot net>
+A basic STM32 library & small programs for it
+
+Copyright (C) 2022-2024  Adam Williams <broadcast at earthling dot net>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -37,7 +38,8 @@ linux
 net
 linux.h: make the stm32 look like Linux for porting kernel drivers
 
-
+--------------------------------------------------------------------------------
+Small STM32 programs
 
 
 

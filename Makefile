@@ -44,11 +44,30 @@ BOOTLOADER_OBJS := \
 	stm32f4xx_tim.o \
 	stm32f4xx_usart.o
 
+BASE_OBJS := \
+	startup_main.o \
+	uart.o \
+	linux.o \
+	system_stm32f4xx.o \
+	stm32f4xx_gpio.o \
+	stm32f4xx_rcc.o \
+	stm32f4xx_usart.o
+
+SENDTTY_OBJS := \
+        sendtty.o
 
 $(shell echo $(GCC_ARM) $(ARM_CFLAGS) > arm_gcc )
 
 
+all: bootloader.bin uart_programmer
 
+sendtty.hex: $(BASE_OBJS) $(SENDTTY_OBJS)
+	$(GCC_ARM) -o sendtty.elf \
+		$(BASE_OBJS) \
+		$(SENDTTY_OBJS) \
+		$(ARM_LFLAGS) \
+		-Tbootloader.ld
+	$(OBJCOPY) -O ihex sendtty.elf sendtty.hex
 
 bootloader.bin: $(BOOTLOADER_OBJS)
 	$(GCC_ARM) -o bootloader.elf $(BOOTLOADER_OBJS) \
@@ -62,9 +81,11 @@ uart_programmer: uart_programmer.c
 clean:
 	rm -f *.a *.o *.bin *.elf *.hex uart_programmer
 
-$(BOOTLOADER_OBJS):
+$(BOOTLOADER_OBJS) $(BASE_OBJS) $(SENDTTY_OBJS):
 	`cat arm_gcc` -c $< -o $*.o
 
+
+sendtty.o: sendtty.c
 bootloader.o: bootloader.c
 uart.o: uart.c
 linux.o: linux.c
