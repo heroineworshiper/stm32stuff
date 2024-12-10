@@ -441,14 +441,15 @@ int main(int argc, char *argv[])
 				code[2] == 'S' &&
 				code[3] == 'C')
 			{
-	// Send code to activate bootloader
+//printf("main %d\n", __LINE__);
+// Send code to activate bootloader
+// If it fails to activate, the TX pin is usually broken
 					write_char(serial_fd, 'X');
-					usleep(100000);
+					usleep(1000);
 					write_char(serial_fd, 'Y');
-					usleep(100000);
+					usleep(1000);
 					write_char(serial_fd, 'Z');
-					usleep(100000);
-	//printf("main %d\n", __LINE__);
+					usleep(1000);
 					break;
 			}
 

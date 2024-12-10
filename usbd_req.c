@@ -28,7 +28,7 @@
 #include "usbd_ioreq.h"
 #include "usbd_desc.h"
 #include "linux.h"
- 
+#include "uart.h"
 
 
 /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
@@ -198,7 +198,8 @@ USBD_Status  USBD_StdDevReq (USB_OTG_CORE_HANDLE  *pdev, USB_SETUP_REQ  *req)
 USBD_Status  USBD_StdItfReq (USB_OTG_CORE_HANDLE  *pdev, USB_SETUP_REQ  *req)
 {
   USBD_Status ret = USBD_OK; 
-  
+
+
   switch (pdev->dev.device_status) 
   {
   case USB_OTG_CONFIGURED:
@@ -375,7 +376,7 @@ static void USBD_GetDescriptor(USB_OTG_CORE_HANDLE  *pdev,
 
   uint16_t len;
   uint8_t *pbuf;
-  
+
   switch (req->wValue >> 8)
   {
   case USB_DESC_TYPE_DEVICE:
@@ -479,7 +480,6 @@ static void USBD_GetDescriptor(USB_OTG_CORE_HANDLE  *pdev,
       USBD_CtlError(pdev , req);
       return;
 #endif     
-
     
   default: 
      USBD_CtlError(pdev , req);

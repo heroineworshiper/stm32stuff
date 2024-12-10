@@ -118,6 +118,8 @@ void print_matrix(matrix_t *mat);
 void print_vector(vector_t *vec);
 // angles are radians
 float get_angle_change(float old_angle, float new_angle);
+// angles are degrees
+float get_angle_change_deg(float old_angle, float new_angle);
 float compass_heading(int mag_x, 
 	int mag_y, 
 	int mag_z,

@@ -245,6 +245,15 @@ float get_angle_change(float old_angle, float new_angle)
 	return result;
 }
 
+float get_angle_change_deg(float old_angle, float new_angle)
+{
+	float result = new_angle - old_angle;
+    if(result > 180) result -= 360;
+    else
+    if(result < -180) result += 360;
+	return result;
+}
+
 
 float fix_angle(float angle)
 {

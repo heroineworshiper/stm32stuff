@@ -51,6 +51,8 @@ typedef struct
 extern uart_t uart;
 
 void init_uart();
+// after corruption by interrupts
+void reset_uart();
 
 #ifdef ENABLE_PRINT
 

@@ -390,7 +390,11 @@ USB_OTG_STS USB_OTG_CoreInit(USB_OTG_CORE_HANDLE *pdev)
   else /* FS interface (embedded Phy or I2C Phy) */
   {
     
-    usbcfg.d32 = USB_OTG_READ_REG32(&pdev->regs.GREGS->GUSBCFG);;
+    usbcfg.d32 = USB_OTG_READ_REG32(&pdev->regs.GREGS->GUSBCFG);
+// TRACE
+// print_hex(usbcfg.d32);
+// print_hex(USB_OTG_READ_REG32 (&pdev->regs.GREGS->GCCFG));
+
     usbcfg.b.physel  = 1; /* FS Interface */
     USB_OTG_WRITE_REG32 (&pdev->regs.GREGS->GUSBCFG, usbcfg.d32);
     /* Reset after a PHY select and set Host mode */
@@ -425,7 +429,9 @@ USB_OTG_STS USB_OTG_CoreInit(USB_OTG_CORE_HANDLE *pdev)
     }
     
     USB_OTG_WRITE_REG32 (&pdev->regs.GREGS->GUSBCFG, usbcfg.d32);
-    
+//TRACE
+//print_hex(usbcfg.d32);
+
     if(pdev->cfg.phy_itface == USB_OTG_I2C_PHY)
     {
       /*Program GI2CCTL.I2CEn*/

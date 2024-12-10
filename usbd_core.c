@@ -136,32 +136,25 @@ void USBD_Init(USB_OTG_CORE_HANDLE *pdev,
                USBD_Class_cb_TypeDef *class_cb, 
                USBD_Usr_cb_TypeDef *usr_cb)
 {
-//TRACE
 	USBD_DCD_INT_fops = (USBD_DCD_INT_cb_TypeDef*)&USBD_DCD_INT_cb;
   /* Hardware Init */
   USB_OTG_BSP_Init(pdev);  
-//TRACE
 
   USBD_DeInit(pdev);
-//TRACE
-  
+
   /*Register class and user callbacks */
   pdev->dev.class_cb = class_cb;
   pdev->dev.usr_cb = usr_cb;  
   pdev->dev.usr_device = pDevice;    
-//TRACE
-  
+
   /* set USB OTG core params */
   DCD_Init(pdev , coreID);
-//TRACE
-  
+
   /* Upon Init call usr callback */
   pdev->dev.usr_cb->Init();
   
-//TRACE
   /* Enable Interrupts */
   USB_OTG_BSP_EnableInterrupt(pdev);
-//TRACE
 }
 
 /**
@@ -172,10 +165,9 @@ void USBD_Init(USB_OTG_CORE_HANDLE *pdev,
 */
 USBD_Status USBD_DeInit(USB_OTG_CORE_HANDLE *pdev)
 {
-  /* Software Init */
-  
   return USBD_OK;
 }
+
 
 /**
 * @brief  USBD_SetupStage 
@@ -188,7 +180,7 @@ static uint8_t USBD_SetupStage(USB_OTG_CORE_HANDLE *pdev)
   USB_SETUP_REQ req;
   
   USBD_ParseSetupRequest(pdev , &req);
-  
+
   switch (req.bmRequest & 0x1F) 
   {
   case USB_REQ_RECIPIENT_DEVICE:   

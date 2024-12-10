@@ -34,6 +34,10 @@ const char hex_table[] =
 
 uart_t uart;
 
+void reset_uart()
+{
+    bzero(&uart, sizeof(uart_t));
+}
 
 void init_uart()
 {
